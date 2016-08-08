@@ -1,5 +1,6 @@
 
 import java.awt.Toolkit;
+import java.net.Socket;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,12 +13,17 @@ import java.awt.Toolkit;
  * @author Marko
  */
 public class WelcomeScreen extends javax.swing.JFrame {
-
+    static Socket soketZaKontrolu = null;
     /**
      * Creates new form WelcomeScreen
      */
-    public WelcomeScreen() {
+    public WelcomeScreen(Socket soketZaKontrolu) {
         initComponents();
+        this.soketZaKontrolu = soketZaKontrolu;
+    }
+
+    private WelcomeScreen() {
+         initComponents();
     }
 
     /**

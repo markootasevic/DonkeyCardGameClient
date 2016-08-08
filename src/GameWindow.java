@@ -1,5 +1,6 @@
 
 import java.awt.Toolkit;
+import java.net.Socket;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,6 +19,10 @@ public class GameWindow extends javax.swing.JFrame {
      */
     public GameWindow() {
         initComponents();
+    }
+
+    GameWindow(Socket soketZaKontrolu) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

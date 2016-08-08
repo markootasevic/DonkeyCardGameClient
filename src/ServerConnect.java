@@ -14,22 +14,20 @@ import javax.swing.JOptionPane;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Marko
  */
 public class ServerConnect extends javax.swing.JFrame {
-    
+
     static PrintStream izlazniTokKaServeruKontrola = null;
-	static BufferedReader ulazniTokOdServeraKontrola = null;
-	static Socket soketZaKontrolu = null;
-	
-	static PrintStream izlazniTokKaServeruPodaci = null;
-	static BufferedReader ulazniTokOdServeraPodaci = null;
-	static Socket soketZaPodatke = null;
-	
-	static BufferedReader konzola = null;
+    static BufferedReader ulazniTokOdServeraKontrola = null;
+    static Socket soketZaKontrolu = null;
+
+//    static PrintStream izlazniTokKaServeruPodaci = null;
+//    static BufferedReader ulazniTokOdServeraPodaci = null;
+//    static Socket soketZaPodatke = null;
+
 
     /**
      * Creates new form ServerConnect
@@ -82,30 +80,26 @@ public class ServerConnect extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         try {
-            konzola = new BufferedReader(
-                    new InputStreamReader(System.in));
-            
-            
-            soketZaKontrolu = new Socket("localhost", 1908);
-            konzola = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            soketZaKontrolu = new Socket("localhost", 13413);
             izlazniTokKaServeruKontrola = new PrintStream(soketZaKontrolu.getOutputStream());
             ulazniTokOdServeraKontrola = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
-            
+
             // provera za uspostavu veze
-            
             izlazniTokKaServeruKontrola.println("cao");
             String povezanoNaServer = ulazniTokOdServeraKontrola.readLine();
             if (povezanoNaServer.equals("cao")) {
-                new GameWindow().setVisible(true);
+                new GameWindow(soketZaKontrolu).setVisible(true);
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(jLayeredPane1,"Can't connect to a server, try again.","ERROR",
+                JOptionPane.showMessageDialog(jLayeredPane1, "Can't connect to a server, try again.", "ERROR",
                         JOptionPane.WARNING_MESSAGE);
-                
+
             }
         } catch (IOException ex) {
-            Logger.getLogger(ServerConnect.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(jLayeredPane1, "Can't connect to a server, try again.", "ERROR",
+                        JOptionPane.WARNING_MESSAGE);
+//            Logger.getLogger(ServerConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -140,7 +134,7 @@ public class ServerConnect extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ServerConnect().setVisible(true);
-                
+
             }
         });
     }
