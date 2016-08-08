@@ -1,5 +1,13 @@
 
 import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,6 +20,16 @@ import java.awt.Toolkit;
  * @author Marko
  */
 public class ServerConnect extends javax.swing.JFrame {
+    
+    static PrintStream izlazniTokKaServeruKontrola = null;
+	static BufferedReader ulazniTokOdServeraKontrola = null;
+	static Socket soketZaKontrolu = null;
+	
+	static PrintStream izlazniTokKaServeruPodaci = null;
+	static BufferedReader ulazniTokOdServeraPodaci = null;
+	static Socket soketZaPodatke = null;
+	
+	static BufferedReader konzola = null;
 
     /**
      * Creates new form ServerConnect
@@ -45,6 +63,11 @@ public class ServerConnect extends javax.swing.JFrame {
         jLayeredPane1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton2.setText("Connect to a server");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jLayeredPane1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 240, -1, -1));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Donkey-3-icon.png"))); // NOI18N
@@ -57,6 +80,34 @@ public class ServerConnect extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+         try {
+            konzola = new BufferedReader(
+                    new InputStreamReader(System.in));
+            
+            
+            soketZaKontrolu = new Socket("localhost", 1908);
+            konzola = new BufferedReader(new InputStreamReader(System.in));
+            izlazniTokKaServeruKontrola = new PrintStream(soketZaKontrolu.getOutputStream());
+            ulazniTokOdServeraKontrola = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
+            
+            // provera za uspostavu veze
+            
+            izlazniTokKaServeruKontrola.println("cao");
+            String povezanoNaServer = ulazniTokOdServeraKontrola.readLine();
+            if (povezanoNaServer.equals("cao")) {
+                new GameWindow().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(jLayeredPane1,"Can't connect to a server, try again.","ERROR",
+                        JOptionPane.WARNING_MESSAGE);
+                
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServerConnect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -89,6 +140,7 @@ public class ServerConnect extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ServerConnect().setVisible(true);
+                
             }
         });
     }
