@@ -85,17 +85,10 @@ public class ServerConnect extends javax.swing.JFrame {
             izlazniTokKaServeruKontrola = new PrintStream(soketZaKontrolu.getOutputStream());
             ulazniTokOdServeraKontrola = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
 
-            // provera za uspostavu veze
-            izlazniTokKaServeruKontrola.println("cao");
-            String povezanoNaServer = ulazniTokOdServeraKontrola.readLine();
-            if (povezanoNaServer.equals("cao")) {
+            
                 new WelcomeScreen(soketZaKontrolu).setVisible(true);
                 this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(jLayeredPane1, "Can't connect to a server, try again.", "ERROR",
-                        JOptionPane.WARNING_MESSAGE);
-
-            }
+            
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(jLayeredPane1, "Can't connect to a server, try again.", "ERROR",
                         JOptionPane.WARNING_MESSAGE);

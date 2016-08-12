@@ -3,27 +3,31 @@ import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import server.DGame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Marko
  */
 public class WelcomeScreen extends javax.swing.JFrame {
+
     static Socket soketZaKontrolu = null;
     static PrintStream izlazniTokKaServeru = null;
     static BufferedReader ulazniTokOdServera = null;
-    
+
     /**
      * Creates new form WelcomeScreen
      */
@@ -34,8 +38,8 @@ public class WelcomeScreen extends javax.swing.JFrame {
             izlazniTokKaServeru = new PrintStream(soketZaKontrolu.getOutputStream());
             ulazniTokOdServera = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
         } catch (IOException ex) {
-             JOptionPane.showMessageDialog(this, "Ooops something went wrong,try connecting again", "ERROR",
-                        JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ooops something went wrong,try connecting again", "ERROR",
+                    JOptionPane.WARNING_MESSAGE);
             new ServerConnect().setVisible(true);
             this.dispose();
 //            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -43,7 +47,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
     }
 
     private WelcomeScreen() {
-         initComponents();
+        initComponents();
     }
 
     /**
@@ -60,7 +64,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        roomCBox = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
@@ -96,8 +100,6 @@ public class WelcomeScreen extends javax.swing.JFrame {
 
         jButton2.setText("Play selected room");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel1.setText("Room name");
 
         jLabel4.setText("Room password ");
@@ -126,7 +128,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addGap(80, 80, 80)
                         .addComponent(jButton2))
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(roomCBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -175,7 +177,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(roomCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(105, 105, 105)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -208,13 +210,14 @@ public class WelcomeScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -241,8 +244,27 @@ public class WelcomeScreen extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new WelcomeScreen().setVisible(true);
-                
+                ObjectInputStream objectInput = null;
+                try {
+                    new WelcomeScreen(soketZaKontrolu).setVisible(true);
+                    objectInput = new ObjectInputStream(soketZaKontrolu.getInputStream());
+                    Object list = objectInput.readObject();
+                    
+                    if (list instanceof LinkedList<?>) {
+                        LinkedList<DGame> roomList = (LinkedList<DGame>) list;
+                        
+                        
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        objectInput.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
             }
         });
     }
@@ -251,7 +273,6 @@ public class WelcomeScreen extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -264,5 +285,6 @@ public class WelcomeScreen extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JComboBox<String> roomCBox;
     // End of variables declaration//GEN-END:variables
 }
