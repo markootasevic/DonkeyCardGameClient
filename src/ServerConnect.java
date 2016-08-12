@@ -89,7 +89,7 @@ public class ServerConnect extends javax.swing.JFrame {
             izlazniTokKaServeruKontrola.println("cao");
             String povezanoNaServer = ulazniTokOdServeraKontrola.readLine();
             if (povezanoNaServer.equals("cao")) {
-                new GameWindow(soketZaKontrolu).setVisible(true);
+                new WelcomeScreen(soketZaKontrolu).setVisible(true);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(jLayeredPane1, "Can't connect to a server, try again.", "ERROR",

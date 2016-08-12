@@ -1,6 +1,13 @@
 
 import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,12 +21,25 @@ import java.net.Socket;
  */
 public class WelcomeScreen extends javax.swing.JFrame {
     static Socket soketZaKontrolu = null;
+    static PrintStream izlazniTokKaServeru = null;
+    static BufferedReader ulazniTokOdServera = null;
+    
     /**
      * Creates new form WelcomeScreen
      */
     public WelcomeScreen(Socket soketZaKontrolu) {
-        initComponents();
-        this.soketZaKontrolu = soketZaKontrolu;
+        try {
+            initComponents();
+            this.soketZaKontrolu = soketZaKontrolu;
+            izlazniTokKaServeru = new PrintStream(soketZaKontrolu.getOutputStream());
+            ulazniTokOdServera = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
+        } catch (IOException ex) {
+             JOptionPane.showMessageDialog(this, "Ooops something went wrong,try connecting again", "ERROR",
+                        JOptionPane.WARNING_MESSAGE);
+            new ServerConnect().setVisible(true);
+            this.dispose();
+//            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private WelcomeScreen() {
@@ -222,6 +242,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new WelcomeScreen().setVisible(true);
+                
             }
         });
     }
