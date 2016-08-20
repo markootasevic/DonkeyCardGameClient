@@ -27,8 +27,6 @@ public class ServerConnect extends javax.swing.JFrame {
 //    static PrintStream izlazniTokKaServeruPodaci = null;
 //    static BufferedReader ulazniTokOdServeraPodaci = null;
 //    static Socket soketZaPodatke = null;
-
-
     /**
      * Creates new form ServerConnect
      */
@@ -85,13 +83,14 @@ public class ServerConnect extends javax.swing.JFrame {
             izlazniTokKaServeruKontrola = new PrintStream(soketZaKontrolu.getOutputStream());
             ulazniTokOdServeraKontrola = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
 
-            
-                new WelcomeScreen(soketZaKontrolu).setVisible(true);
-                this.dispose();
-            
+            WelcomeScreen ws = new WelcomeScreen(soketZaKontrolu);
+            ws.setVisible(true);
+
+            this.dispose();
+
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(jLayeredPane1, "Can't connect to a server, try again.", "ERROR",
-                        JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.WARNING_MESSAGE);
 //            Logger.getLogger(ServerConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed

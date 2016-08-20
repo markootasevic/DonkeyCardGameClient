@@ -37,6 +37,31 @@ public class WelcomeScreen extends javax.swing.JFrame {
             this.soketZaKontrolu = soketZaKontrolu;
             izlazniTokKaServeru = new PrintStream(soketZaKontrolu.getOutputStream());
             ulazniTokOdServera = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
+
+            ObjectInputStream objectInput = null;
+            try {
+
+                objectInput = new ObjectInputStream(soketZaKontrolu.getInputStream());
+                Object list = objectInput.readObject();
+
+                if (list instanceof LinkedList<?>) {
+                    LinkedList<DGame> roomList = (LinkedList<DGame>) list;
+                    System.out.println(roomList.get(0).getName());
+                    for (int i = 0; i < roomList.size(); i++) {
+                        roomCBox.addItem(roomList.get(i).getName());
+
+                    }
+
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    objectInput.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Ooops something went wrong,try connecting again", "ERROR",
                     JOptionPane.WARNING_MESSAGE);
@@ -44,9 +69,10 @@ public class WelcomeScreen extends javax.swing.JFrame {
             this.dispose();
 //            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
-    private WelcomeScreen() {
+    public WelcomeScreen() {
         initComponents();
     }
 
@@ -166,7 +192,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(57, Short.MAX_VALUE)
+                .addContainerGap(78, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -178,7 +204,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
                     .addComponent(roomCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(105, 105, 105)
+                .addGap(84, 84, 84)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -217,7 +243,8 @@ public class WelcomeScreen extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+        System.out.println("dal radi sad");
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -244,27 +271,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ObjectInputStream objectInput = null;
-                try {
-                    new WelcomeScreen(soketZaKontrolu).setVisible(true);
-                    objectInput = new ObjectInputStream(soketZaKontrolu.getInputStream());
-                    Object list = objectInput.readObject();
-                    
-                    if (list instanceof LinkedList<?>) {
-                        LinkedList<DGame> roomList = (LinkedList<DGame>) list;
-                        
-                        
-                    }
-                } catch (IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    try {
-                        objectInput.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
+                new WelcomeScreen().setVisible(true);
             }
         });
     }
