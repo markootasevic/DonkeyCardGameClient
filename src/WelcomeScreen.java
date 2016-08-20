@@ -260,14 +260,15 @@ public class WelcomeScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_playerNameTfActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         nameNotEntered.setEnabled(false);
+        nameNotEntered.setEnabled(false);
         String playerName = playerNameTf.getText();
-        if(playerName.equals("") || playerName == null) {
+        if (playerName.equals("") || playerName == null) {
             nameNotEntered.setEnabled(true);
             return;
         }
+        izlazniTokKaServeru.println(playerName);
         izlazniTokKaServeru.println("quickgame");
-        GameWindow gw = new GameWindow(soketZaKontrolu,playerName);
+        GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
         gw.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -299,10 +300,11 @@ public class WelcomeScreen extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         nameNotEntered.setEnabled(false);
         String playerName = playerNameTf.getText();
-        if(playerName.equals("") || playerName == null) {
+        if (playerName.equals("") || playerName == null) {
             nameNotEntered.setEnabled(true);
             return;
         }
+        izlazniTokKaServeru.println(playerName);
         izlazniTokKaServeru.println("newGameRoom");
         izlazniTokKaServeru.println(customRoomName.getText());
         izlazniTokKaServeru.println(customRoomPassword.getPassword());
@@ -314,10 +316,10 @@ public class WelcomeScreen extends javax.swing.JFrame {
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            GameWindow gw = new GameWindow(soketZaKontrolu,playerName);
-                gw.setVisible(true);
-                this.dispose();
-            
+            GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
+            gw.setVisible(true);
+            this.dispose();
+
         } catch (IOException ex) {
             Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -328,7 +330,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         nameNotEntered.setEnabled(false);
         String playerName = playerNameTf.getText();
-        if(playerName.equals("") || playerName == null) {
+        if (playerName.equals("") || playerName == null) {
             nameNotEntered.setEnabled(true);
             return;
         }
@@ -348,24 +350,26 @@ public class WelcomeScreen extends javax.swing.JFrame {
         if (!room.getPassword().equals("")) {
             String password = (String) JOptionPane.showInputDialog(this, "Enter room password");
             if (password.equals(room.getPassword())) {
+                izlazniTokKaServeru.println(playerName);
                 izlazniTokKaServeru.println("connectToGameRoom");
                 izlazniTokKaServeru.println(room.getName());
                 izlazniTokKaServeru.println(password);
-                GameWindow gw = new GameWindow(soketZaKontrolu,playerName);
+                GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
                 gw.setVisible(true);
                 this.dispose();
             } else {
-                 JOptionPane.showMessageDialog(this, "The password is incorect,please try again", "ERROR",
-                    JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "The password is incorect,please try again", "ERROR",
+                        JOptionPane.WARNING_MESSAGE);
             }
         }
+        izlazniTokKaServeru.println(playerName);
         izlazniTokKaServeru.println("connectToGameRoom");
-                izlazniTokKaServeru.println(room.getName());
-                izlazniTokKaServeru.println("");
-                GameWindow gw = new GameWindow(soketZaKontrolu,playerName);
-                gw.setVisible(true);
-                this.dispose();
-        
+        izlazniTokKaServeru.println(room.getName());
+        izlazniTokKaServeru.println("");
+        GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
+        gw.setVisible(true);
+        this.dispose();
+
 
     }//GEN-LAST:event_jButton2ActionPerformed
 

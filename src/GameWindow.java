@@ -1,4 +1,5 @@
 
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,29 +7,33 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Marko
  */
 public class GameWindow extends javax.swing.JFrame {
+
     Socket soket = null;
-     PrintStream izlazniTokKaServeru = null;
-     ObjectInputStream objectInput = null;
-     String playerName = null;
+    PrintStream izlazniTokKaServeru = null;
+    ObjectInputStream objectInput = null;
+    String playerName = null;
+
     /**
      * Creates new form GameWindow
      */
     public GameWindow() {
         initComponents();
+
     }
-    
+
     public GameWindow(Socket soketParam, String playerName) {
         try {
             initComponents();
@@ -41,8 +46,6 @@ public class GameWindow extends javax.swing.JFrame {
             Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,11 +65,11 @@ public class GameWindow extends javax.swing.JFrame {
         name2 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        bntCard1 = new javax.swing.JButton();
-        bntCard3 = new javax.swing.JButton();
-        bntCard4 = new javax.swing.JButton();
-        bntCard5 = new javax.swing.JButton();
-        bntCard2 = new javax.swing.JButton();
+        btnCard1 = new javax.swing.JButton();
+        btnCard3 = new javax.swing.JButton();
+        btnCard4 = new javax.swing.JButton();
+        btnCard5 = new javax.swing.JButton();
+        btnCard2 = new javax.swing.JButton();
         namePlayer = new javax.swing.JLabel();
         donkeyPlayer = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -98,21 +101,24 @@ public class GameWindow extends javax.swing.JFrame {
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/5 cards back players 2,3.jpg"))); // NOI18N
 
-        bntCard1.setText("jButton1");
+        btnCard3.setText("jButton1");
 
-        bntCard3.setText("jButton1");
+        btnCard4.setText("jButton1");
 
-        bntCard4.setText("jButton1");
+        btnCard5.setText("jButton1");
 
-        bntCard5.setText("jButton1");
-
-        bntCard2.setText("jButton1");
+        btnCard2.setText("jButton1");
 
         namePlayer.setText("Username");
 
         donkeyPlayer.setText("Donkey player");
 
         jButton1.setText("PUT DOWN YOUR CARDS");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setForeground(new java.awt.Color(204, 0, 0));
         jLabel1.setText("Droped cars");
@@ -155,20 +161,20 @@ public class GameWindow extends javax.swing.JFrame {
                                         .addComponent(jLabel3))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(97, 97, 97)
-                                        .addComponent(bntCard1)
+                                        .addComponent(btnCard1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(bntCard2)
+                                        .addComponent(btnCard2)
                                         .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(bntCard3)
+                                            .addComponent(btnCard3)
                                             .addComponent(donkeyPlayer)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGap(10, 10, 10)
                                                 .addComponent(namePlayer)))))
                                 .addGap(18, 18, 18)
-                                .addComponent(bntCard4)
+                                .addComponent(btnCard4)
                                 .addGap(18, 18, 18)
-                                .addComponent(bntCard5))
+                                .addComponent(btnCard5))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(214, 214, 214)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -222,11 +228,11 @@ public class GameWindow extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(bntCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bntCard3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bntCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bntCard5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bntCard2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCard3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCard4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCard5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCard2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addComponent(namePlayer)
                 .addGap(18, 18, 18)
@@ -236,6 +242,22 @@ public class GameWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+//        try {
+//            Image img = ImageIO.read(getClass().getResource("resources/1.1.jpg"));
+//            ImageIcon icon = new ImageIcon(img);
+//            Image image = icon.getImage();
+//            // reduce by 50%
+//            image = image.getScaledInstance(image.getWidth(null) / 2, image.getHeight(null) / 2, Image.SCALE_SMOOTH);
+//            icon.setImage(image);
+//
+//            btnCard1.setIcon(icon);
+//
+//        } catch (IOException ex) {
+//            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -273,11 +295,11 @@ public class GameWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bntCard1;
-    private javax.swing.JButton bntCard2;
-    private javax.swing.JButton bntCard3;
-    private javax.swing.JButton bntCard4;
-    private javax.swing.JButton bntCard5;
+    private javax.swing.JButton btnCard1;
+    private javax.swing.JButton btnCard2;
+    private javax.swing.JButton btnCard3;
+    private javax.swing.JButton btnCard4;
+    private javax.swing.JButton btnCard5;
     private javax.swing.JLabel donkey1;
     private javax.swing.JLabel donkey2;
     private javax.swing.JLabel donkey3;
