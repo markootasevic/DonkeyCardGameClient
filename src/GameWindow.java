@@ -1,6 +1,11 @@
 
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.PrintStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,12 +18,28 @@ import java.net.Socket;
  * @author Marko
  */
 public class GameWindow extends javax.swing.JFrame {
-
+    Socket soket = null;
+     PrintStream izlazniTokKaServeru = null;
+     ObjectInputStream objectInput = null;
+     String playerName = null;
     /**
      * Creates new form GameWindow
      */
     public GameWindow() {
         initComponents();
+    }
+    
+    public GameWindow(Socket soketParam, String playerName) {
+        try {
+            initComponents();
+            this.playerName = playerName;
+            namePlayer.setText(playerName);
+            soket = soketParam;
+            izlazniTokKaServeru = new PrintStream(soket.getOutputStream());
+            objectInput = new ObjectInputStream(soket.getInputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     
@@ -48,6 +69,10 @@ public class GameWindow extends javax.swing.JFrame {
         bntCard2 = new javax.swing.JButton();
         namePlayer = new javax.swing.JLabel();
         donkeyPlayer = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Donkey game");
@@ -87,6 +112,17 @@ public class GameWindow extends javax.swing.JFrame {
 
         donkeyPlayer.setText("Donkey player");
 
+        jButton1.setText("PUT DOWN YOUR CARDS");
+
+        jLabel1.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel1.setText("Droped cars");
+
+        jLabel2.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel2.setText("Droped cars");
+
+        jLabel4.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel4.setText("Droped cars");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,50 +135,70 @@ public class GameWindow extends javax.swing.JFrame {
                             .addComponent(name2)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(15, 15, 15)
-                                .addComponent(donkey2)))
-                        .addGap(241, 241, 241)
+                                .addComponent(donkey2))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(228, 228, 228)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(name1)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(15, 15, 15)
-                                .addComponent(donkey1))))
+                                .addComponent(donkey1)
+                                .addGap(38, 38, 38)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(193, 193, 193)
-                                .addComponent(jLabel3))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(97, 97, 97)
-                                .addComponent(bntCard1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(bntCard2)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(bntCard3)
-                                    .addComponent(donkeyPlayer)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(namePlayer)))))
-                        .addGap(18, 18, 18)
-                        .addComponent(bntCard4)
-                        .addGap(18, 18, 18)
-                        .addComponent(bntCard5)))
+                                        .addGap(193, 193, 193)
+                                        .addComponent(jLabel3))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(97, 97, 97)
+                                        .addComponent(bntCard1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(bntCard2)
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(bntCard3)
+                                            .addComponent(donkeyPlayer)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(10, 10, 10)
+                                                .addComponent(namePlayer)))))
+                                .addGap(18, 18, 18)
+                                .addComponent(bntCard4)
+                                .addGap(18, 18, 18)
+                                .addComponent(bntCard5))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(214, 214, 214)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(name3)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(donkey3))
-                    .addComponent(jLabel9))
-                .addGap(32, 32, 32))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(name3)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(donkey3))
+                            .addComponent(jLabel9))
+                        .addGap(32, 32, 32))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(name1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(name1)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(1, 1, 1)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(name3)
@@ -157,10 +213,14 @@ public class GameWindow extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel8))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(donkey1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(donkey1)
+                            .addComponent(jLabel2))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3)
-                        .addGap(81, 81, 81)
+                        .addGap(23, 23, 23)
+                        .addComponent(jButton1)
+                        .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(bntCard1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(bntCard3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -171,7 +231,7 @@ public class GameWindow extends javax.swing.JFrame {
                 .addComponent(namePlayer)
                 .addGap(18, 18, 18)
                 .addComponent(donkeyPlayer)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -222,7 +282,11 @@ public class GameWindow extends javax.swing.JFrame {
     private javax.swing.JLabel donkey2;
     private javax.swing.JLabel donkey3;
     private javax.swing.JLabel donkeyPlayer;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel name1;

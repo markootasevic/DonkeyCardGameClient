@@ -24,29 +24,30 @@ import server.DGame;
  */
 public class WelcomeScreen extends javax.swing.JFrame {
 
-    static Socket soketZaKontrolu = null;
-    static PrintStream izlazniTokKaServeru = null;
-    static BufferedReader ulazniTokOdServera = null;
+    Socket soketZaKontrolu = null;
+    PrintStream izlazniTokKaServeru = null;
+    BufferedReader ulazniTokOdServera = null;
+    ObjectInputStream objectInput = null;
+    LinkedList<DGame> roomList = null;
 
     /**
      * Creates new form WelcomeScreen
      */
-    public WelcomeScreen(Socket soketZaKontrolu) {
+    public WelcomeScreen(Socket soketParam) {
         try {
             initComponents();
-            this.soketZaKontrolu = soketZaKontrolu;
+            soketZaKontrolu = soketParam;
             izlazniTokKaServeru = new PrintStream(soketZaKontrolu.getOutputStream());
             ulazniTokOdServera = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
 
-            ObjectInputStream objectInput = null;
             try {
 
                 objectInput = new ObjectInputStream(soketZaKontrolu.getInputStream());
                 Object list = objectInput.readObject();
 
                 if (list instanceof LinkedList<?>) {
-                    LinkedList<DGame> roomList = (LinkedList<DGame>) list;
-                    System.out.println(roomList.get(0).getName());
+                    roomList = (LinkedList<DGame>) list;
+//                    System.out.println(roomList.get(0).getName());
                     for (int i = 0; i < roomList.size(); i++) {
                         roomCBox.addItem(roomList.get(i).getName());
 
@@ -69,7 +70,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
             this.dispose();
 //            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     public WelcomeScreen() {
@@ -86,21 +87,22 @@ public class WelcomeScreen extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        playerNameTf = new javax.swing.JTextField();
+        nameNotEntered = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         roomCBox = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        customRoomName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        customRoomPassword = new javax.swing.JPasswordField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        customRoomRobots = new javax.swing.JComboBox<>();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("resources/index.jpg")));
@@ -108,14 +110,15 @@ public class WelcomeScreen extends javax.swing.JFrame {
 
         jLabel2.setText("Enter your name");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        playerNameTf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                playerNameTfActionPerformed(evt);
             }
         });
 
-        jLabel3.setForeground(new java.awt.Color(255, 0, 0));
-        jLabel3.setText("You have not entered a name");
+        nameNotEntered.setForeground(new java.awt.Color(255, 0, 0));
+        nameNotEntered.setText("You have not entered a name");
+        nameNotEntered.setEnabled(false);
 
         jButton1.setText("Quick play");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -125,6 +128,11 @@ public class WelcomeScreen extends javax.swing.JFrame {
         });
 
         jButton2.setText("Play selected room");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Room name");
 
@@ -134,28 +142,26 @@ public class WelcomeScreen extends javax.swing.JFrame {
 
         jLabel6.setText("Number of robots");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3" }));
+        customRoomRobots.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3" }));
 
         jButton3.setText("Create room and play");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Refresh room list");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField1)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(285, 285, 285)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(80, 80, 80)
-                        .addComponent(jButton2))
-                    .addComponent(roomCBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,21 +179,37 @@ public class WelcomeScreen extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel4)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jPasswordField1))
+                                        .addComponent(customRoomPassword))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel1)
                                         .addGap(29, 29, 29)
-                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(customRoomName, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(216, 216, 216)
                                         .addComponent(jLabel6)
                                         .addGap(41, 41, 41)
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(customRoomRobots, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(207, 207, 207)
                                         .addComponent(jButton3)))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(playerNameTf)
+                    .addComponent(nameNotEntered, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(285, 285, 285)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jButton1)
+                            .addGap(80, 80, 80)
+                            .addComponent(jButton2))
+                        .addComponent(roomCBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,12 +221,14 @@ public class WelcomeScreen extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addComponent(jButton2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(playerNameTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
+                    .addComponent(nameNotEntered)
                     .addComponent(roomCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(84, 84, 84)
+                .addGap(18, 18, 18)
+                .addComponent(jButton4)
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -215,15 +239,15 @@ public class WelcomeScreen extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel1)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(customRoomName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(customRoomPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton3)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(4, 4, 4)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(customRoomRobots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5))
         );
@@ -231,19 +255,125 @@ public class WelcomeScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void playerNameTfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playerNameTfActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_playerNameTfActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+         nameNotEntered.setEnabled(false);
+        String playerName = playerNameTf.getText();
+        if(playerName.equals("") || playerName == null) {
+            nameNotEntered.setEnabled(true);
+            return;
+        }
+        izlazniTokKaServeru.println("quickgame");
+        GameWindow gw = new GameWindow(soketZaKontrolu,playerName);
+        gw.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        izlazniTokKaServeru.println("refresh");
+        Object list = null;
+        try {
+            list = objectInput.readObject();
+        } catch (IOException ex) {
+            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (list instanceof LinkedList<?>) {
+            LinkedList<DGame> roomList = (LinkedList<DGame>) list;
+//                    System.out.println(roomList.get(0).getName());
+            for (int i = 0; i < roomList.size(); i++) {
+                roomCBox.addItem(roomList.get(i).getName());
+
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Ooops something went wrong,please try again", "ERROR",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        nameNotEntered.setEnabled(false);
+        String playerName = playerNameTf.getText();
+        if(playerName.equals("") || playerName == null) {
+            nameNotEntered.setEnabled(true);
+            return;
+        }
+        izlazniTokKaServeru.println("newGameRoom");
+        izlazniTokKaServeru.println(customRoomName.getText());
+        izlazniTokKaServeru.println(customRoomPassword.getPassword());
+        izlazniTokKaServeru.println(customRoomRobots.getSelectedItem().toString());
+        try {
+            String available = (String) objectInput.readObject();
+            if (available.equals("serverNameUsed")) {
+                JOptionPane.showMessageDialog(this, "There is another room with that name,try another name", "ERROR",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            GameWindow gw = new GameWindow(soketZaKontrolu,playerName);
+                gw.setVisible(true);
+                this.dispose();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        nameNotEntered.setEnabled(false);
+        String playerName = playerNameTf.getText();
+        if(playerName.equals("") || playerName == null) {
+            nameNotEntered.setEnabled(true);
+            return;
+        }
+        String roomName = (String) roomCBox.getSelectedItem();
+        if (roomList == null) {
+            JOptionPane.showMessageDialog(this, "There are no room available,try quick play", "ERROR",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        DGame room = null;
+        for (int i = 0; i < roomList.size(); i++) {
+            if (roomList.get(i).getName().equals(roomName)) {
+                room = roomList.get(i);
+                break;
+            }
+        }
+        if (!room.getPassword().equals("")) {
+            String password = (String) JOptionPane.showInputDialog(this, "Enter room password");
+            if (password.equals(room.getPassword())) {
+                izlazniTokKaServeru.println("connectToGameRoom");
+                izlazniTokKaServeru.println(room.getName());
+                izlazniTokKaServeru.println(password);
+                GameWindow gw = new GameWindow(soketZaKontrolu,playerName);
+                gw.setVisible(true);
+                this.dispose();
+            } else {
+                 JOptionPane.showMessageDialog(this, "The password is incorect,please try again", "ERROR",
+                    JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        izlazniTokKaServeru.println("connectToGameRoom");
+                izlazniTokKaServeru.println(room.getName());
+                izlazniTokKaServeru.println("");
+                GameWindow gw = new GameWindow(soketZaKontrolu,playerName);
+                gw.setVisible(true);
+                this.dispose();
+        
+
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        System.out.println("dal radi sad");
+
 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -277,21 +407,22 @@ public class WelcomeScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField customRoomName;
+    private javax.swing.JPasswordField customRoomPassword;
+    private javax.swing.JComboBox<String> customRoomRobots;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel nameNotEntered;
+    private javax.swing.JTextField playerNameTf;
     private javax.swing.JComboBox<String> roomCBox;
     // End of variables declaration//GEN-END:variables
 }

@@ -20,9 +20,9 @@ import javax.swing.JOptionPane;
  */
 public class ServerConnect extends javax.swing.JFrame {
 
-    static PrintStream izlazniTokKaServeruKontrola = null;
-    static BufferedReader ulazniTokOdServeraKontrola = null;
-    static Socket soketZaKontrolu = null;
+     PrintStream izlazniTokKaServeruKontrola = null;
+     BufferedReader ulazniTokOdServeraKontrola = null;
+     Socket soketZaKontrolu = null;
 
 //    static PrintStream izlazniTokKaServeruPodaci = null;
 //    static BufferedReader ulazniTokOdServeraPodaci = null;
@@ -89,7 +89,7 @@ public class ServerConnect extends javax.swing.JFrame {
             this.dispose();
 
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(jLayeredPane1, "Can't connect to a server, try again.", "ERROR",
+            JOptionPane.showMessageDialog(this, "Can't connect to a server, try again.", "ERROR",
                     JOptionPane.WARNING_MESSAGE);
 //            Logger.getLogger(ServerConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
