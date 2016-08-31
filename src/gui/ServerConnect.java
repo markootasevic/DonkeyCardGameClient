@@ -52,7 +52,7 @@ public class ServerConnect extends javax.swing.JFrame {
         jLabel2.setText("jLabel2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("resources/index.jpg")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/index.jpg")));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -70,9 +70,9 @@ public class ServerConnect extends javax.swing.JFrame {
         jLayeredPane1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 140, -1, -1));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/511GoCH+ykL.jpg"))); // NOI18N
-        jLayeredPane1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 510, -1));
+        jLayeredPane1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 500, 370));
 
-        getContentPane().add(jLayeredPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, -1, -1));
+        getContentPane().add(jLayeredPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 510, 380));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

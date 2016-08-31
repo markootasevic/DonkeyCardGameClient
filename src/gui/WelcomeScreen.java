@@ -24,7 +24,6 @@ import server.DGame;
  * @author Marko
  */
 public class WelcomeScreen extends javax.swing.JFrame {
-
     Socket soketZaKontrolu = null;
     PrintStream izlazniTokKaServeru = null;
     BufferedReader ulazniTokOdServera = null;
@@ -107,7 +106,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("resources/index.jpg")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/index.jpg")));
         setResizable(false);
 
         jLabel2.setText("Enter your name");
@@ -205,12 +204,11 @@ public class WelcomeScreen extends javax.swing.JFrame {
                 .addGap(285, 285, 285)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jButton1)
-                            .addGap(80, 80, 80)
-                            .addComponent(jButton2))
-                        .addComponent(roomCBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(80, 80, 80)
+                        .addComponent(jButton2))
+                    .addComponent(roomCBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
