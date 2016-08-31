@@ -1,3 +1,5 @@
+package gui;
+
 
 import java.awt.Toolkit;
 import java.io.BufferedReader;
@@ -9,7 +11,6 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import server.DGame;
 
@@ -63,6 +64,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
                     Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Ooops something went wrong,try connecting again", "ERROR",
                     JOptionPane.WARNING_MESSAGE);
