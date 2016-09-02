@@ -5,6 +5,7 @@
  */
 package donkeycardgameclient;
 
+import gui.GameWindow;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -19,9 +20,11 @@ public class Timer extends Thread {
     boolean run = true;
     boolean stop = false;
     JLabel labela = null;
+    GameWindow gw = null;
 
-    public Timer(JLabel l) {
+    public Timer(JLabel l, GameWindow g) {
         labela = l;
+        gw = g;
     }
 
     public void run() {
@@ -40,8 +43,7 @@ public class Timer extends Thread {
                 labela.setText("" + i);
                 sleep(1000);
             }
-            return;
-
+            gw.punish();
         } catch (InterruptedException ex) {
             labela.setText("desilo se sranje");
         }

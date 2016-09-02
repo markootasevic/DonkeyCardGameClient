@@ -53,6 +53,10 @@ public class GamplayThread extends Thread {
                     Card card = (Card) obj;
                     gw.receveCard(card);
                 }
+                if(obj instanceof String) {
+                    String drop = (String) obj;
+                    gw.someoneDroppedCards(drop);
+                }
             }
 
         } catch (IOException | ClassNotFoundException ex) {
