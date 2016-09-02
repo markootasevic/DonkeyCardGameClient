@@ -5,6 +5,8 @@ import donkeycardgameclient.Stopwatch;
 import donkeycardgameclient.Timer;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
@@ -49,7 +51,12 @@ public class GameWindow extends javax.swing.JFrame {
      */
     public GameWindow() {
         initComponents();
-        System.out.println(mostFrequentCard());
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeApp();
+            }
+        });
     }
 
     public GameWindow(Socket soketParam, String playerName) {
@@ -65,9 +72,26 @@ public class GameWindow extends javax.swing.JFrame {
             dropPlayer2.setVisible(true);
             dropPlayer3.setVisible(true);
 
+            this.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    windowClosed(e);
+                }
+            });
+
         } catch (IOException ex) {
             Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void closeApp() {
+
+        int opcija = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to exit this game", "Going away? :'(",
+                JOptionPane.YES_NO_CANCEL_OPTION);
+        if (opcija == JOptionPane.YES_OPTION) {
+            System.exit(0);   // OVDE TREBA DA SE DORADI ONO STO TREBA DA SE DESI KAD IZADJE IZ APLIKACIJE
+        }
+
     }
 
     // metode za komunikaciju sa GamplayThread klasom
@@ -190,7 +214,7 @@ public class GameWindow extends javax.swing.JFrame {
         enableButtons();
         int[] a = mostFrequentCard();
         int count = a[1];
-        if(count == 4) {
+        if (count == 4) {
             btnDropCards.setEnabled(true);
         }
         timer = new Timer(countdownLabel, this);
@@ -376,25 +400,27 @@ public class GameWindow extends javax.swing.JFrame {
         }
 
     }
-    public void sendCardFromTheRightButton (int i) {
+
+    public void sendCardFromTheRightButton(int i) {
         switch (i + 1) {
-                    case 1:
-                        sendCard(i + 1, btnCard1);
-                        break;
-                    case 2:
-                        sendCard(i + 1, btnCard2);
-                        break;
-                    case 3:
-                        sendCard(i + 1, btnCard3);
-                        break;
-                    case 4:
-                        sendCard(i + 1, btnCard3);
-                        break;
-                    case 5:
-                        sendCard(i + 1, btnCard3);
-                        break;
-                }
+            case 1:
+                sendCard(i + 1, btnCard1);
+                break;
+            case 2:
+                sendCard(i + 1, btnCard2);
+                break;
+            case 3:
+                sendCard(i + 1, btnCard3);
+                break;
+            case 4:
+                sendCard(i + 1, btnCard3);
+                break;
+            case 5:
+                sendCard(i + 1, btnCard3);
+                break;
+        }
     }
+
     public void punish() {
         disableButtons();
         for (int i = 0; i < myCards.length; i++) {
@@ -407,7 +433,7 @@ public class GameWindow extends javax.swing.JFrame {
         int[] a = mostFrequentCard();
         int cardNumber = a[0];
         for (int i = 0; i < myCards.length; i++) {
-            if(myCards[i].getCardNumber() == cardNumber) {
+            if (myCards[i].getCardNumber() == cardNumber) {
                 sendCardFromTheRightButton(i);
             }
         }
@@ -466,7 +492,7 @@ public class GameWindow extends javax.swing.JFrame {
         countdownLabel = new javax.swing.JLabel();
         labelWaitForPlayers = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Donkey game");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/index.jpg")));
