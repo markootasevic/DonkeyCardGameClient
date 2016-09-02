@@ -19,8 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import server.Card;
-import server.CardSymbol;
-import server.DGame;
 import server.Player;
 
 /*
@@ -45,6 +43,7 @@ public class GameWindow extends javax.swing.JFrame {
     int twoOfClubsCounter = 0;
     Stopwatch stopwatch;
     Timer timer;
+    boolean iDroppedCards = true;
 
     /**
      * Creates new form GameWindow
@@ -357,6 +356,7 @@ public class GameWindow extends javax.swing.JFrame {
     }
 
     public void someoneDroppedCards(String playerName) {
+        iDroppedCards = false;
         disableButtons();
         btnDropCards.setEnabled(true);
         if (player1.getPlayerName().equals(playerName)) {
@@ -609,8 +609,19 @@ public class GameWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDropCardsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDropCardsActionPerformed
-        stopwatch.stopTime();
-        izlazniTokKaServeru.println(stopwatch.count());
+        if (iDroppedCards == false) {
+            stopwatch.stopTime();
+            izlazniTokKaServeru.println(stopwatch.count());
+        } else {
+            izlazniTokKaServeru.println(playerName);
+        }
+        iDroppedCards = true;
+        btnCard1.setIcon(null);
+        btnCard2.setIcon(null);
+        btnCard3.setIcon(null);
+        btnCard4.setIcon(null);
+        btnCard5.setIcon(null);
+
     }//GEN-LAST:event_btnDropCardsActionPerformed
 
     private void btnCard1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCard1ActionPerformed
