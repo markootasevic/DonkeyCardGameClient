@@ -96,6 +96,20 @@ public class GameWindow extends javax.swing.JFrame {
     // metode za komunikaciju sa GamplayThread klasom
     public void changePlayerStatus(LinkedList<Player> list) {
         playerList = list;
+        for (int i = 0; i < playerList.size(); i++) {
+            if(playerList.get(i).getDonkeyLetters().equals("DONKEY")) {
+                if(playerList.get(i).getPlayerName().equals(playerName)) {
+                    JOptionPane.showMessageDialog(this, "You lost, better luck next time");
+                    WelcomeScreen ws = new WelcomeScreen(soket);
+                    ws.setVisible(true);
+                    this.dispose();
+                }
+                JOptionPane.showMessageDialog(this, playerList.get(i).getPlayerName() + "lost");
+                    WelcomeScreen ws = new WelcomeScreen(soket);
+                    ws.setVisible(true);
+                    this.dispose();
+            }
+        }
         if (playerList.size() < 4) {
             labelWaitForPlayers.setVisible(true);
         } else {
@@ -212,8 +226,8 @@ public class GameWindow extends javax.swing.JFrame {
     public void receveCard(Card card) {
         enableButtons();
         int[] a = mostFrequentCard();
-        int count = a[1];
-        if (count == 4) {
+        int numberOfSameCards = a[1];
+        if (numberOfSameCards == 4) {
             btnDropCards.setEnabled(true);
         }
         timer = new Timer(countdownLabel, this);
@@ -423,13 +437,6 @@ public class GameWindow extends javax.swing.JFrame {
 
     public void punish() {
         disableButtons();
-        for (int i = 0; i < myCards.length; i++) {
-            if (myCards[i].isItTwoOfClubs()) {
-                sendCardFromTheRightButton(i);
-                return;
-            }
-
-        }
         int[] a = mostFrequentCard();
         int cardNumber = a[0];
         for (int i = 0; i < myCards.length; i++) {
@@ -437,17 +444,39 @@ public class GameWindow extends javax.swing.JFrame {
                 sendCardFromTheRightButton(i);
             }
         }
+//        for (int i = 0; i < myCards.length; i++) {
+//            if (myCards[i].isItTwoOfClubs()) {
+//                sendCardFromTheRightButton(i);
+//                return;
+//            }
+
+//        }
+        
     }
 
     public int[] mostFrequentCard() {
         int[] a = new int[2];
-        int[] n = new int[]{1, 2, 1, 2};
+        int[] cardsAsInt = new int[5];
+        int counter = 0;
+        for (int i = 0; i < myCards.length; i++) {
+            if(myCards[i] == null) {
+                cardsAsInt[counter] = -1;
+                counter++;
+                continue;
+            }
+            cardsAsInt[counter] = myCards[i].getCardNumber();
+            counter++;
+        }
+        int[] n = cardsAsInt;
         int maxKey = 0;
         int maxCounts = 0;
 
         int[] counts = new int[n.length];
 
         for (int i = 0; i < n.length; i++) {
+            if(n[i] == -1) {
+                continue;
+            }
             counts[n[i]]++;
             if (maxCounts < counts[n[i]]) {
                 maxCounts = counts[n[i]];
@@ -547,7 +576,7 @@ public class GameWindow extends javax.swing.JFrame {
                 btnCard4ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCard4, new org.netbeans.lib.awtextra.AbsoluteConstraints(518, 242, -1, 94));
+        getContentPane().add(btnCard4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 240, -1, 94));
 
         btnCard5.setText("jButton1");
         btnCard5.addActionListener(new java.awt.event.ActionListener() {
@@ -555,7 +584,7 @@ public class GameWindow extends javax.swing.JFrame {
                 btnCard5ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCard5, new org.netbeans.lib.awtextra.AbsoluteConstraints(613, 242, -1, 94));
+        getContentPane().add(btnCard5, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 240, -1, 94));
 
         btnCard2.setText("jButton1");
         btnCard2.addActionListener(new java.awt.event.ActionListener() {

@@ -43,6 +43,12 @@ public class GamplayThread extends Thread {
                 Object obj = objectInput.readObject();
                 if (obj instanceof LinkedList<?>) {
                     playerList = (LinkedList<Player>) obj;
+                    for (int i = 0; i < playerList.size(); i++) {
+                        if(playerList.get(i).isAreCardsDropped()) {
+                            gw.someoneDroppedCards(playerList.get(i).getPlayerName());
+                            break;
+                        }
+                    }
                     gw.changePlayerStatus(playerList);
                 }
                 if (obj instanceof Card[]) {
@@ -53,10 +59,10 @@ public class GamplayThread extends Thread {
                     Card card = (Card) obj;
                     gw.receveCard(card);
                 }
-                if(obj instanceof String) {
-                    String drop = (String) obj;
-                    gw.someoneDroppedCards(drop);
-                }
+//                if(obj instanceof String) {
+//                    String drop = (String) obj;
+//                    gw.someoneDroppedCards(drop);
+//                }
             }
 
         } catch (IOException | ClassNotFoundException ex) {
