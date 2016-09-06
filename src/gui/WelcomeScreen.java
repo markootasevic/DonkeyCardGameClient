@@ -56,13 +56,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    objectInput.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            } 
             
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Ooops something went wrong,try connecting again", "ERROR",
@@ -266,8 +260,9 @@ public class WelcomeScreen extends javax.swing.JFrame {
             nameNotEntered.setEnabled(true);
             return;
         }
-        izlazniTokKaServeru.println(playerName);
         izlazniTokKaServeru.println("quickgame");
+        izlazniTokKaServeru.println(playerName);
+        
         GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
         gw.setVisible(true);
         this.dispose();
@@ -286,6 +281,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
         if (list instanceof LinkedList<?>) {
             LinkedList<DGame> roomList = (LinkedList<DGame>) list;
 //                    System.out.println(roomList.get(0).getName());
+            roomCBox.removeAllItems();
             for (int i = 0; i < roomList.size(); i++) {
                 roomCBox.addItem(roomList.get(i).getName());
 

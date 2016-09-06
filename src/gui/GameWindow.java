@@ -73,7 +73,7 @@ public class GameWindow extends javax.swing.JFrame {
 
             this.addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent e) {
-                    windowClosed(e);
+                    closeApp();
                 }
             });
 
@@ -104,7 +104,7 @@ public class GameWindow extends javax.swing.JFrame {
                     ws.setVisible(true);
                     this.dispose();
                 }
-                JOptionPane.showMessageDialog(this, playerList.get(i).getPlayerName() + "lost");
+                JOptionPane.showMessageDialog(this, playerList.get(i).getPlayerName() + " lost");
                     WelcomeScreen ws = new WelcomeScreen(soket);
                     ws.setVisible(true);
                     this.dispose();
