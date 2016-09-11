@@ -21,7 +21,6 @@ import javax.swing.JOptionPane;
 public class ServerConnect extends javax.swing.JFrame {
 
      PrintStream izlazniTokKaServeruKontrola = null;
-     BufferedReader ulazniTokOdServeraKontrola = null;
      Socket soketZaKontrolu = null;
 
 //    static PrintStream izlazniTokKaServeruPodaci = null;
@@ -79,9 +78,9 @@ public class ServerConnect extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-            soketZaKontrolu = new Socket("localhost", 13413);
+            soketZaKontrolu = new Socket("192.168.0.20", 13413);
             izlazniTokKaServeruKontrola = new PrintStream(soketZaKontrolu.getOutputStream());
-            ulazniTokOdServeraKontrola = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
+            
 
             WelcomeScreen ws = new WelcomeScreen(soketZaKontrolu);
             ws.setVisible(true);

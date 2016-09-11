@@ -25,12 +25,14 @@ public class GamplayThread extends Thread {
     Socket soket = null;
     LinkedList<Player> playerList = new LinkedList<>();
     GameWindow gw;
+    boolean receve = true;
 
     public GamplayThread(Socket s, GameWindow gameWin) {
         try {
             soket = s;
             gw = gameWin;
             objectInput = new ObjectInputStream(soket.getInputStream());
+            receve = true;
         } catch (IOException ex) {
             Logger.getLogger(GamplayThread.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -39,22 +41,33 @@ public class GamplayThread extends Thread {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (receve) {
+                if (!receve) {
+                    return;
+                }
                 Object obj = objectInput.readObject();
+                if (!receve) {
+                    return;
+                }
+                if (obj instanceof String) {
+                    String reconnect = (String) obj;
+                    if(reconnect.contains("Do you")) {
+                        String[] array = reconnect.split("as");
+                        String playerName = array[1];
+                        gw.reconnectToExistingGame(reconnect, playerName);
+                    }
+                }
                 if (obj instanceof LinkedList<?>) {
                     playerList = (LinkedList<Player>) obj;
                     for (int i = 0; i < playerList.size(); i++) {
-                        if(playerList.get(i).isAreCardsDropped()) {
+                        if (playerList.get(i).isAreCardsDropped()) {
                             gw.someoneDroppedCards(playerList.get(i).getPlayerName());
                             break;
                         }
                     }
                     gw.changePlayerStatus(playerList);
                 }
-                if (obj instanceof Card[]) {
-                    Card[] myCards = (Card[]) obj;
-                    gw.getMyCards(myCards);
-                }
+                
                 if (obj instanceof Card) {
                     Card card = (Card) obj;
                     gw.receveCard(card);
@@ -68,6 +81,10 @@ public class GamplayThread extends Thread {
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(GamplayThread.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void stopThread() {
+        receve = false;
     }
 
 }

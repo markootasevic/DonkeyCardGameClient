@@ -1,6 +1,5 @@
 package gui;
 
-
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,9 +23,9 @@ import server.DGame;
  * @author Marko
  */
 public class WelcomeScreen extends javax.swing.JFrame {
+
     Socket soketZaKontrolu = null;
     PrintStream izlazniTokKaServeru = null;
-    BufferedReader ulazniTokOdServera = null;
     ObjectInputStream objectInput = null;
     LinkedList<DGame> roomList = null;
 
@@ -38,7 +37,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
             initComponents();
             soketZaKontrolu = soketParam;
             izlazniTokKaServeru = new PrintStream(soketZaKontrolu.getOutputStream());
-            ulazniTokOdServera = new BufferedReader(new InputStreamReader(soketZaKontrolu.getInputStream()));
+            
 
             try {
 
@@ -49,15 +48,16 @@ public class WelcomeScreen extends javax.swing.JFrame {
                     roomList = (LinkedList<DGame>) list;
 //                    System.out.println(roomList.get(0).getName());
                     for (int i = 0; i < roomList.size(); i++) {
-                        roomCBox.addItem(roomList.get(i).getName());
+                        String roomName = roomList.get(i).getName() + " " + roomList.get(i).getPlayers().size() + "/4";
+                        roomCBox.addItem(roomName);
 
                     }
 
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-            
+            }
+
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Ooops something went wrong,try connecting again", "ERROR",
                     JOptionPane.WARNING_MESSAGE);
@@ -262,7 +262,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
         }
         izlazniTokKaServeru.println("quickgame");
         izlazniTokKaServeru.println(playerName);
-        
+
         GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
         gw.setVisible(true);
         this.dispose();
@@ -270,6 +270,11 @@ public class WelcomeScreen extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         izlazniTokKaServeru.println("refresh");
+        refreshRoomList();
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    public void refreshRoomList() {
         Object list = null;
         try {
             list = objectInput.readObject();
@@ -283,7 +288,8 @@ public class WelcomeScreen extends javax.swing.JFrame {
 //                    System.out.println(roomList.get(0).getName());
             roomCBox.removeAllItems();
             for (int i = 0; i < roomList.size(); i++) {
-                roomCBox.addItem(roomList.get(i).getName());
+                String roomName = roomList.get(i).getName() + " " + roomList.get(i).getPlayers().size() + "/4";
+                        roomCBox.addItem(roomName);
 
             }
 
@@ -291,31 +297,45 @@ public class WelcomeScreen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Ooops something went wrong,please try again", "ERROR",
                     JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        nameNotEntered.setEnabled(false);
-        String playerName = playerNameTf.getText();
-        if (playerName.equals("") || playerName == null) {
-            nameNotEntered.setEnabled(true);
-            return;
-        }
-        izlazniTokKaServeru.println(playerName);
-        izlazniTokKaServeru.println("newGameRoom");
-        izlazniTokKaServeru.println(customRoomName.getText());
-        izlazniTokKaServeru.println(customRoomPassword.getPassword());
-        izlazniTokKaServeru.println(customRoomRobots.getSelectedItem().toString());
         try {
-            String available = (String) objectInput.readObject();
-            if (available.equals("serverNameUsed")) {
-                JOptionPane.showMessageDialog(this, "There is another room with that name,try another name", "ERROR",
-                        JOptionPane.WARNING_MESSAGE);
+            nameNotEntered.setEnabled(false);
+            String playerName = playerNameTf.getText();
+            if (playerName.equals("") || playerName == null) {
+                nameNotEntered.setEnabled(true);
                 return;
             }
-            GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
-            gw.setVisible(true);
-            this.dispose();
 
+            izlazniTokKaServeru.println("newGameRoom");
+            izlazniTokKaServeru.println(playerName);
+            izlazniTokKaServeru.println(customRoomName.getText());
+            String nameAvailable = (String) objectInput.readObject();
+            if (!(nameAvailable.equalsIgnoreCase("ok"))) {
+                JOptionPane.showMessageDialog(this, "Your name is already used, enter another name", "ERROR",
+                        JOptionPane.WARNING_MESSAGE);
+                refreshRoomList();
+                return;
+            }
+            izlazniTokKaServeru.println(customRoomPassword.getPassword());
+            izlazniTokKaServeru.println(customRoomRobots.getSelectedItem().toString());
+            try {
+                String available = (String) objectInput.readObject();
+                if (available.equals("serverNameUsed")) {
+                    JOptionPane.showMessageDialog(this, "There is another room with that name,try another name", "ERROR",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
+                gw.setVisible(true);
+                this.dispose();
+
+            } catch (IOException ex) {
+                Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IOException ex) {
             Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -324,47 +344,76 @@ public class WelcomeScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        nameNotEntered.setEnabled(false);
-        String playerName = playerNameTf.getText();
-        if (playerName.equals("") || playerName == null) {
-            nameNotEntered.setEnabled(true);
-            return;
-        }
-        String roomName = (String) roomCBox.getSelectedItem();
-        if (roomList == null) {
-            JOptionPane.showMessageDialog(this, "There are no room available,try quick play", "ERROR",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        DGame room = null;
-        for (int i = 0; i < roomList.size(); i++) {
-            if (roomList.get(i).getName().equals(roomName)) {
-                room = roomList.get(i);
-                break;
+        try {
+            nameNotEntered.setEnabled(false);
+            String playerName = playerNameTf.getText();
+            if (playerName.equals("") || playerName == null) {
+                nameNotEntered.setEnabled(true);
+                return;
             }
-        }
-        if (!room.getPassword().equals("")) {
-            String password = (String) JOptionPane.showInputDialog(this, "Enter room password");
-            if (password.equals(room.getPassword())) {
-                izlazniTokKaServeru.println(playerName);
-                izlazniTokKaServeru.println("connectToGameRoom");
-                izlazniTokKaServeru.println(room.getName());
-                izlazniTokKaServeru.println(password);
-                GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
-                gw.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "The password is incorect,please try again", "ERROR",
+            String roomName = (String) roomCBox.getSelectedItem();
+            if (roomList == null) {
+                JOptionPane.showMessageDialog(this, "There are no room available,try quick play", "ERROR",
                         JOptionPane.WARNING_MESSAGE);
+                return;
             }
+            DGame room = null;
+            for (int i = 0; i < roomList.size(); i++) {
+                if (roomList.get(i).getName().equals(roomName)) {
+                    room = roomList.get(i);
+                    break;
+                }
+            }
+            if (!room.getPassword().equals("")) {
+                String password = (String) JOptionPane.showInputDialog(this, "Enter room password");
+                if (password.equals(room.getPassword())) {
+                    
+                    try {
+                        izlazniTokKaServeru.println("connectToGameRoom");
+                        izlazniTokKaServeru.println(playerName);
+                        izlazniTokKaServeru.println(room.getName());
+                        izlazniTokKaServeru.println(password);
+                        String available = (String) objectInput.readObject();
+                        System.out.println(available);
+                        if (!(available.equalsIgnoreCase("ok"))) {
+                            JOptionPane.showMessageDialog(this, "This room is full or the game is over,please select another room or choose quick play", "ERROR",
+                                    JOptionPane.WARNING_MESSAGE);
+                            refreshRoomList();
+                            return;
+                        }
+                        GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
+                        gw.setVisible(true);
+                        this.dispose();
+                    } catch (IOException ex) {
+                        Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "The password is incorect,please try again", "ERROR",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+            
+            izlazniTokKaServeru.println("connectToGameRoom");
+            izlazniTokKaServeru.println(playerName);
+            izlazniTokKaServeru.println(room.getName());
+            izlazniTokKaServeru.println("");
+            String available = (String) objectInput.readObject();
+            if (!(available.equalsIgnoreCase("ok"))) {
+                JOptionPane.showMessageDialog(this, "This room is full or the game is over,please select another room or choose quick play", "ERROR",
+                        JOptionPane.WARNING_MESSAGE);
+                refreshRoomList();
+                return;
+            }
+            GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
+            gw.setVisible(true);
+            this.dispose();
+        } catch (IOException ex) {
+            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-        izlazniTokKaServeru.println(playerName);
-        izlazniTokKaServeru.println("connectToGameRoom");
-        izlazniTokKaServeru.println(room.getName());
-        izlazniTokKaServeru.println("");
-        GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
-        gw.setVisible(true);
-        this.dispose();
 
 
     }//GEN-LAST:event_jButton2ActionPerformed

@@ -141,7 +141,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnCard3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jButton1"/>
+        <Property name="text" type="java.lang.String" value=" "/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCard3ActionPerformed"/>
@@ -153,9 +153,6 @@
       </Constraints>
     </Component>
     <Component class="javax.swing.JButton" name="btnCard4">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jButton1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCard4ActionPerformed"/>
       </Events>
@@ -166,9 +163,6 @@
       </Constraints>
     </Component>
     <Component class="javax.swing.JButton" name="btnCard5">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jButton1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCard5ActionPerformed"/>
       </Events>
@@ -179,9 +173,6 @@
       </Constraints>
     </Component>
     <Component class="javax.swing.JButton" name="btnCard2">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jButton1"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCard2ActionPerformed"/>
       </Events>

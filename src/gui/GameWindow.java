@@ -44,6 +44,8 @@ public class GameWindow extends javax.swing.JFrame {
     Stopwatch stopwatch;
     Timer timer;
     boolean iDroppedCards = true;
+    GamplayThread gt = null;
+    boolean firstCards = true;
 
     /**
      * Creates new form GameWindow
@@ -66,7 +68,8 @@ public class GameWindow extends javax.swing.JFrame {
             namePlayer.setText(playerName);
             soket = soketParam;
             izlazniTokKaServeru = new PrintStream(soket.getOutputStream());
-            new GamplayThread(soket, this).start();
+            gt = new GamplayThread(soket, this);
+            gt.start();
             dropPlayer1.setVisible(true);
             dropPlayer2.setVisible(true);
             dropPlayer3.setVisible(true);
@@ -74,6 +77,7 @@ public class GameWindow extends javax.swing.JFrame {
             this.addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent e) {
                     closeApp();
+                    
                 }
             });
 
@@ -88,19 +92,32 @@ public class GameWindow extends javax.swing.JFrame {
                 "Are you sure you want to exit this game", "Going away? :'(",
                 JOptionPane.YES_NO_CANCEL_OPTION);
         if (opcija == JOptionPane.YES_OPTION) {
-            System.exit(0);   // OVDE TREBA DA SE DORADI ONO STO TREBA DA SE DESI KAD IZADJE IZ APLIKACIJE
+            System.exit(0);   
         }
 
     }
 
     // metode za komunikaciju sa GamplayThread klasom
+    public void reconnectToExistingGame(String msg, String playerName) {
+        int opcija = JOptionPane.showConfirmDialog(this,
+                msg, "Join existing game?",
+                JOptionPane.YES_NO_CANCEL_OPTION);
+        if (opcija == JOptionPane.YES_OPTION) {
+            izlazniTokKaServeru.println("yes");
+            GameWindow gw = new GameWindow(soket, playerName);
+            gw.setVisible(true);
+            this.dispose();
+        }
+    }
+    
     public void changePlayerStatus(LinkedList<Player> list) {
         playerList = list;
         for (int i = 0; i < playerList.size(); i++) {
-            if(playerList.get(i).getDonkeyLetters().equals("DONKEY")) {
+            if(playerList.get(i).getDonkeyLetters().equalsIgnoreCase("DONKEY")) {
                 if(playerList.get(i).getPlayerName().equals(playerName)) {
                     JOptionPane.showMessageDialog(this, "You lost, better luck next time");
                     WelcomeScreen ws = new WelcomeScreen(soket);
+                    gt.stopThread();
                     ws.setVisible(true);
                     this.dispose();
                 }
@@ -112,8 +129,10 @@ public class GameWindow extends javax.swing.JFrame {
         }
         if (playerList.size() < 4) {
             labelWaitForPlayers.setVisible(true);
+            disableButtons();
         } else {
             labelWaitForPlayers.setVisible(false);
+            enableButtons();
         }
         for (int i = 0; i < playerList.size(); i++) {
             if (playerList.get(i) == null) {
@@ -123,6 +142,12 @@ public class GameWindow extends javax.swing.JFrame {
             if (playerList.get(i).getPlayerName().equals(playerName)) {
                 exists = true;
                 donkeyPlayer.setText(playerList.get(i).getDonkeyLetters());
+                if(firstCards) {
+                    for (int j = 0; j < playerList.get(i).getPlayerHandCards().size(); j++) {
+                        myCards[i] = playerList.get(i).getPlayerHandCards().get(i);
+                    }
+                    firstCards = false;
+                }
                 continue;
             }
             if (playerList.get(i).getPlayerName().equals(player1.getPlayerName())) {
@@ -218,10 +243,6 @@ public class GameWindow extends javax.swing.JFrame {
         return null;
     }
 
-    public void getMyCards(Card[] cards) {
-        myCards = cards;
-
-    }
 
     public void receveCard(Card card) {
         enableButtons();
@@ -289,8 +310,8 @@ public class GameWindow extends javax.swing.JFrame {
             return path;
         }
         switch (card.getCardNumber()) {
-            case 1:
-                path += "1.";
+            case 11:
+                path += "11.";
                 path += getCardSymbolNumer(card);
                 path += ".jpg";
                 return path;
@@ -310,9 +331,7 @@ public class GameWindow extends javax.swing.JFrame {
                 path += ".jpg";
                 return path;
         }
-        path += "1.";
-        path += getCardSymbolNumer(card);
-        path += ".jpg";
+        
         return path;
 
     }
@@ -562,7 +581,7 @@ public class GameWindow extends javax.swing.JFrame {
         });
         getContentPane().add(btnCard1, new org.netbeans.lib.awtextra.AbsoluteConstraints(197, 242, 58, 94));
 
-        btnCard3.setText("jButton1");
+        btnCard3.setText(" ");
         btnCard3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCard3ActionPerformed(evt);
@@ -570,7 +589,6 @@ public class GameWindow extends javax.swing.JFrame {
         });
         getContentPane().add(btnCard3, new org.netbeans.lib.awtextra.AbsoluteConstraints(385, 242, -1, 94));
 
-        btnCard4.setText("jButton1");
         btnCard4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCard4ActionPerformed(evt);
@@ -578,7 +596,6 @@ public class GameWindow extends javax.swing.JFrame {
         });
         getContentPane().add(btnCard4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 240, -1, 94));
 
-        btnCard5.setText("jButton1");
         btnCard5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCard5ActionPerformed(evt);
@@ -586,7 +603,6 @@ public class GameWindow extends javax.swing.JFrame {
         });
         getContentPane().add(btnCard5, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 240, -1, 94));
 
-        btnCard2.setText("jButton1");
         btnCard2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCard2ActionPerformed(evt);
@@ -638,11 +654,12 @@ public class GameWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDropCardsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDropCardsActionPerformed
+        firstCards = true;
         if (iDroppedCards == false) {
             stopwatch.stopTime();
-            izlazniTokKaServeru.println(stopwatch.count());
+            izlazniTokKaServeru.println("time:" + stopwatch.count());
         } else {
-            izlazniTokKaServeru.println(playerName);
+            izlazniTokKaServeru.println("drop");
         }
         iDroppedCards = true;
         btnCard1.setIcon(null);
