@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /*
@@ -78,7 +80,7 @@ public class ServerConnect extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-            soketZaKontrolu = new Socket("192.168.0.20", 13413);
+            soketZaKontrolu = new Socket("localhost", 13413);
             izlazniTokKaServeruKontrola = new PrintStream(soketZaKontrolu.getOutputStream());
             
 
