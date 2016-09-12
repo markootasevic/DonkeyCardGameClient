@@ -73,11 +73,12 @@ public class GameWindow extends javax.swing.JFrame {
             dropPlayer1.setVisible(true);
             dropPlayer2.setVisible(true);
             dropPlayer3.setVisible(true);
+            disableButtons();
 
             this.addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent e) {
                     closeApp();
-                    
+
                 }
             });
 
@@ -92,7 +93,7 @@ public class GameWindow extends javax.swing.JFrame {
                 "Are you sure you want to exit this game", "Going away? :'(",
                 JOptionPane.YES_NO_CANCEL_OPTION);
         if (opcija == JOptionPane.YES_OPTION) {
-            System.exit(0);   
+            System.exit(0);
         }
 
     }
@@ -109,16 +110,16 @@ public class GameWindow extends javax.swing.JFrame {
             this.dispose();
         }
     }
-    
+
     public void changePlayerStatus(LinkedList<Player> list) {
         playerList = list;
-        System.out.println(list.get(0).getPlayerName());
-        System.out.println(list.get(1).getPlayerName());
-        System.out.println(list.get(3).getPlayerName());
-        System.out.println(list.get(2).getPlayerName());
+//        System.out.println(list.get(0).getPlayerName());
+//        System.out.println(list.get(1).getPlayerName());
+//        System.out.println(list.get(3).getPlayerName());
+//        System.out.println(list.get(2).getPlayerName());
         for (int i = 0; i < playerList.size(); i++) {
-            if(playerList.get(i).getDonkeyLetters().equalsIgnoreCase("DONKEY")) {
-                if(playerList.get(i).getPlayerName().equals(playerName)) {
+            if (playerList.get(i).getDonkeyLetters().equalsIgnoreCase("DONKEY")) {
+                if (playerList.get(i).getPlayerName().equals(playerName)) {
                     JOptionPane.showMessageDialog(this, "You lost, better luck next time");
                     WelcomeScreen ws = new WelcomeScreen(soket);
                     gt.stopThread();
@@ -126,9 +127,9 @@ public class GameWindow extends javax.swing.JFrame {
                     this.dispose();
                 }
                 JOptionPane.showMessageDialog(this, playerList.get(i).getPlayerName() + " lost");
-                    WelcomeScreen ws = new WelcomeScreen(soket);
-                    ws.setVisible(true);
-                    this.dispose();
+                WelcomeScreen ws = new WelcomeScreen(soket);
+                ws.setVisible(true);
+                this.dispose();
             }
         }
         if (playerList.size() < 4) {
@@ -136,7 +137,7 @@ public class GameWindow extends javax.swing.JFrame {
             disableButtons();
         } else {
             labelWaitForPlayers.setVisible(false);
-            enableButtons();
+//            disableButtons();
         }
         for (int i = 0; i < playerList.size(); i++) {
             if (playerList.get(i) == null) {
@@ -146,27 +147,36 @@ public class GameWindow extends javax.swing.JFrame {
             if (playerList.get(i).getPlayerName().equals(playerName)) {
                 exists = true;
                 donkeyPlayer.setText(playerList.get(i).getDonkeyLetters());
-                if(firstCards) {
-                    for (int j = 0; j < playerList.get(i).getPlayerHandCards().size(); j++) {
-                        myCards[i] = playerList.get(i).getPlayerHandCards().get(i);
-                    }
+                if (firstCards) {
                     firstCards = false;
+                    for (int j = 0; j < playerList.get(i).getPlayerHandCards().size(); j++) {
+                        myCards[j] = playerList.get(i).getPlayerHandCards().get(j);
+                    }
+
+                    if (myCards.length == 4) {
+                        setImageToCardButton(btnCard1, myCards[0]);
+                        setImageToCardButton(btnCard2, myCards[1]);
+                        setImageToCardButton(btnCard3, myCards[2]);
+                        setImageToCardButton(btnCard4, myCards[3]);
+                    } else {
+                        setImageToCardButton(btnCard1, myCards[0]);
+                        setImageToCardButton(btnCard2, myCards[1]);
+                        setImageToCardButton(btnCard3, myCards[2]);
+                        setImageToCardButton(btnCard4, myCards[3]);
+                        setImageToCardButton(btnCard5, myCards[4]);
+                        System.out.println("doso ovde");
+                        System.out.println(myCards[0].getCardNumber());
+                        System.out.println(myCards[1].getCardNumber());
+                        System.out.println(myCards[2].getCardNumber());
+                        System.out.println(myCards[3].getCardNumber());
+                        System.out.println(myCards[4].getCardNumber());
+                        enableButtons();
+                        System.out.println("ovdeeee");
+                        timer = new Timer(countdownLabel, this);
+                        timer.start();
+                    }
+
                 }
-                continue;
-            }
-            if (playerList.get(i).getPlayerName().equals(player1.getPlayerName())) {
-                player1 = playerList.get(i);
-                exists = true;
-                continue;
-            }
-            if (playerList.get(i).getPlayerName().equals(player2.getPlayerName())) {
-                player2 = playerList.get(i);
-                exists = true;
-                continue;
-            }
-            if (playerList.get(i).getPlayerName().equals(player3.getPlayerName())) {
-                player3 = playerList.get(i);
-                exists = true;
                 continue;
             }
             if (exists == false) {
@@ -182,6 +192,22 @@ public class GameWindow extends javax.swing.JFrame {
                     player3 = playerList.get(i);
                     continue;
                 }
+            }
+
+            if (playerList.get(i).getPlayerName().equals(player1.getPlayerName())) {
+                player1 = playerList.get(i);
+                exists = true;
+                continue;
+            }
+            if (playerList.get(i).getPlayerName().equals(player2.getPlayerName())) {
+                player2 = playerList.get(i);
+                exists = true;
+                continue;
+            }
+            if (playerList.get(i).getPlayerName().equals(player3.getPlayerName())) {
+                player3 = playerList.get(i);
+                exists = true;
+                continue;
             }
 
         }
@@ -214,25 +240,81 @@ public class GameWindow extends javax.swing.JFrame {
         }
         if (player.isPossesionTwoOfClubs()) {
             if (player.getNumberOfCardsInHand() == 4) {
-                String path = "/resources/4 cards 2 of clubs player 1.jpg";
-                ImageIcon img = getImageIcon(path);
-                label.setIcon(img);
+                try {
+                    String path;
+                    if(player.getPlayerName().equals(player1.getPlayerName())) {
+                    path = "/resources/4 cards 2 of clubs player 1.jpg";
+                    } else {
+                        path = "/resources/4 cards 2 of clubs player 2,3.jpg";
+                    }
+                    Image img = ImageIO.read(getClass().getResource(path));
+                    ImageIcon icon = new ImageIcon(img);
+                    Image image = icon.getImage();
+                    // reduce by 50%
+                    image = image.getScaledInstance(image.getWidth(null) / 2, image.getHeight(null) / 2, Image.SCALE_SMOOTH);
+                    icon.setImage(image);
+                    label.setIcon(icon);
+                } catch (IOException ex) {
+                    Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
             } else {
-                String path = "/resources/5 cards 2 of clubs players 1.jpg";
-                ImageIcon img = getImageIcon(path);
-                label.setIcon(img);
+                try {
+                    String path;
+                    if(player.getPlayerName().equals(player1.getPlayerName())) {
+                    path = "/resources/5 cards 2 of clubs players 1.jpg";
+                    } else {
+                        path = "/resources/5 cards 2 of clubs players 2,3";
+                    }
+                    Image img = ImageIO.read(getClass().getResource(path));
+                    ImageIcon icon = new ImageIcon(img);
+                    Image image = icon.getImage();
+                    // reduce by 50%
+                    image = image.getScaledInstance(image.getWidth(null) / 2, image.getHeight(null) / 2, Image.SCALE_SMOOTH);
+                    icon.setImage(image);
+                    label.setIcon(icon);
+                } catch (IOException ex) {
+                    Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
             }
         } else if (player.getNumberOfCardsInHand() == 4) {
-            String path = "/resources/4 cards back.jpg";
-            ImageIcon img = getImageIcon(path);
-            label.setIcon(img);
+            try {
+                String path;
+                if(player.getPlayerName().equals(player1.getPlayerName())) {
+                path = "/resources/4 cards back.jpg";
+                } else {
+                    path = "/resources/4 cards back players 2,3";
+                }
+                Image img = ImageIO.read(getClass().getResource(path));
+                ImageIcon icon = new ImageIcon(img);
+                Image image = icon.getImage();
+                // reduce by 50%
+                image = image.getScaledInstance(image.getWidth(null) / 2, image.getHeight(null) / 2, Image.SCALE_SMOOTH);
+                icon.setImage(image);
+                label.setIcon(icon);
+            } catch (IOException ex) {
+                Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         } else {
-            String path = "/resources/5 cards back players 1.jpg";
-            ImageIcon img = getImageIcon(path);
-            label.setIcon(img);
+            try {
+                String path;
+                if(player.getPlayerName().equals(player1.getPlayerName())) {
+                path = "/resources/5 cards back players 1.jpg";
+                } else {
+                    path = "/resources/5 cards back players 2,3";
+                }
+                Image img = ImageIO.read(getClass().getResource(path));
+                ImageIcon icon = new ImageIcon(img);
+                Image image = icon.getImage();
+                // reduce by 50%
+                image = image.getScaledInstance(image.getWidth(null) / 2, image.getHeight(null) / 2, Image.SCALE_SMOOTH);
+                icon.setImage(image);
+                label.setIcon(icon);
+            } catch (IOException ex) {
+                Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -247,14 +329,16 @@ public class GameWindow extends javax.swing.JFrame {
         return null;
     }
 
-
     public void receveCard(Card card) {
-        enableButtons();
-        int[] a = mostFrequentCard();
-        int numberOfSameCards = a[1];
-        if (numberOfSameCards == 4) {
-            btnDropCards.setEnabled(true);
+        if (myCards.length == 5) {
+            return;
         }
+        enableButtons();
+        int a = getPopularElement();
+//        int numberOfSameCards = a[1];
+//        if (numberOfSameCards == 4) {
+//            btnDropCards.setEnabled(true);
+//        }
         timer = new Timer(countdownLabel, this);
         timer.start();
         if (card.isItTwoOfClubs()) {
@@ -335,7 +419,7 @@ public class GameWindow extends javax.swing.JFrame {
                 path += ".jpg";
                 return path;
         }
-        
+
         return path;
 
     }
@@ -385,7 +469,7 @@ public class GameWindow extends javax.swing.JFrame {
     }
 
     public void sendCard(int cardHandPosition, JButton btn) {
-        String cardString = myCards[cardHandPosition - 1].getCardNumber() + "." + getCardSymbolNumer(myCards[cardHandPosition - 1]);
+        String cardString = myCards[cardHandPosition - 1].getCardNumber() + ":" + getCardSymbolNumer(myCards[cardHandPosition - 1]);
         izlazniTokKaServeru.println(cardString);
         btn.setIcon(null);
         myCards[cardHandPosition - 1] = null;
@@ -460,8 +544,8 @@ public class GameWindow extends javax.swing.JFrame {
 
     public void punish() {
         disableButtons();
-        int[] a = mostFrequentCard();
-        int cardNumber = a[0];
+//        int[] a = mostFrequentCard();
+        int cardNumber = getPopularElement();
         for (int i = 0; i < myCards.length; i++) {
             if (myCards[i].getCardNumber() == cardNumber) {
                 sendCardFromTheRightButton(i);
@@ -474,7 +558,38 @@ public class GameWindow extends javax.swing.JFrame {
 //            }
 
 //        }
-        
+    }
+
+    public int getPopularElement() {
+        int[] cardsAsInt = new int[5];
+        int counter = 0;
+        for (int i = 0; i < myCards.length; i++) {
+            if (myCards[i] == null) {
+                cardsAsInt[counter] = -1;
+                counter++;
+                continue;
+            }
+            cardsAsInt[counter] = myCards[i].getCardNumber();
+            counter++;
+        }
+        int[] a = cardsAsInt;
+        int count = 1, tempCount;
+        int popular = a[0];
+        int temp = 0;
+        for (int i = 0; i < (a.length - 1); i++) {
+            temp = a[i];
+            tempCount = 0;
+            for (int j = 1; j < a.length; j++) {
+                if (temp == a[j]) {
+                    tempCount++;
+                }
+            }
+            if (tempCount > count) {
+                popular = temp;
+                count = tempCount;
+            }
+        }
+        return popular;
     }
 
     public int[] mostFrequentCard() {
@@ -482,7 +597,7 @@ public class GameWindow extends javax.swing.JFrame {
         int[] cardsAsInt = new int[5];
         int counter = 0;
         for (int i = 0; i < myCards.length; i++) {
-            if(myCards[i] == null) {
+            if (myCards[i] == null) {
                 cardsAsInt[counter] = -1;
                 counter++;
                 continue;
@@ -497,9 +612,9 @@ public class GameWindow extends javax.swing.JFrame {
         int[] counts = new int[n.length];
 
         for (int i = 0; i < n.length; i++) {
-            if(n[i] == -1) {
-                continue;
-            }
+//            if (n[i] == -1) {
+//                continue;
+//            }
             counts[n[i]]++;
             if (maxCounts < counts[n[i]]) {
                 maxCounts = counts[n[i]];
@@ -591,28 +706,28 @@ public class GameWindow extends javax.swing.JFrame {
                 btnCard3ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCard3, new org.netbeans.lib.awtextra.AbsoluteConstraints(385, 242, -1, 94));
+        getContentPane().add(btnCard3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 240, -1, 94));
 
         btnCard4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCard4ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCard4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 240, -1, 94));
+        getContentPane().add(btnCard4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 240, -1, 94));
 
         btnCard5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCard5ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCard5, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 240, -1, 94));
+        getContentPane().add(btnCard5, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 240, -1, 94));
 
         btnCard2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCard2ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCard2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 242, -1, 94));
+        getContentPane().add(btnCard2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 240, -1, 94));
 
         namePlayer.setText("Username");
         getContentPane().add(namePlayer, new org.netbeans.lib.awtextra.AbsoluteConstraints(395, 354, -1, -1));
@@ -680,8 +795,9 @@ public class GameWindow extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
-        sendCard(1, btnCard1);
         disableButtons();
+        sendCard(1, btnCard1);
+        
         timer.kill();
     }//GEN-LAST:event_btnCard1ActionPerformed
 
@@ -691,8 +807,9 @@ public class GameWindow extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
-        sendCard(2, btnCard2);
         disableButtons();
+        sendCard(2, btnCard2);
+        
         timer.kill();
     }//GEN-LAST:event_btnCard2ActionPerformed
 
@@ -702,8 +819,9 @@ public class GameWindow extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
-        sendCard(3, btnCard3);
         disableButtons();
+        sendCard(3, btnCard3);
+        
         timer.kill();
     }//GEN-LAST:event_btnCard3ActionPerformed
 
@@ -713,8 +831,9 @@ public class GameWindow extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
-        sendCard(4, btnCard4);
         disableButtons();
+        sendCard(4, btnCard4);
+       
         timer.kill();
     }//GEN-LAST:event_btnCard4ActionPerformed
 
@@ -724,8 +843,9 @@ public class GameWindow extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
-        sendCard(5, btnCard5);
         disableButtons();
+        sendCard(5, btnCard5);
+        
         timer.kill();
     }//GEN-LAST:event_btnCard5ActionPerformed
 

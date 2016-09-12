@@ -45,13 +45,16 @@ public class GamplayThread extends Thread {
                 if (!receve) {
                     return;
                 }
-                Object obj = objectInput.readObject();
+                Object obj = null;
+                while (obj == null) {
+                    obj = objectInput.readObject();
+                }
                 if (!receve) {
                     return;
                 }
                 if (obj instanceof String) {
                     String reconnect = (String) obj;
-                    if(reconnect.contains("Do you")) {
+                    if (reconnect.contains("Do you")) {
                         String[] array = reconnect.split("as");
                         String playerName = array[1];
                         gw.reconnectToExistingGame(reconnect, playerName);
@@ -67,7 +70,7 @@ public class GamplayThread extends Thread {
                     }
                     gw.changePlayerStatus(playerList);
                 }
-                
+
                 if (obj instanceof Card) {
                     Card card = (Card) obj;
                     gw.receveCard(card);
