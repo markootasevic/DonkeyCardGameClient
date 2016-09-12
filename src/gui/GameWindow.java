@@ -112,6 +112,10 @@ public class GameWindow extends javax.swing.JFrame {
     
     public void changePlayerStatus(LinkedList<Player> list) {
         playerList = list;
+        System.out.println(list.get(0).getPlayerName());
+        System.out.println(list.get(1).getPlayerName());
+        System.out.println(list.get(3).getPlayerName());
+        System.out.println(list.get(2).getPlayerName());
         for (int i = 0; i < playerList.size(); i++) {
             if(playerList.get(i).getDonkeyLetters().equalsIgnoreCase("DONKEY")) {
                 if(playerList.get(i).getPlayerName().equals(playerName)) {

@@ -311,31 +311,17 @@ public class WelcomeScreen extends javax.swing.JFrame {
             izlazniTokKaServeru.println("newGameRoom");
             izlazniTokKaServeru.println(playerName);
             izlazniTokKaServeru.println(customRoomName.getText());
-            String nameAvailable = (String) objectInput.readObject();
-            if (!(nameAvailable.equalsIgnoreCase("ok"))) {
-                JOptionPane.showMessageDialog(this, "Your name is already used, enter another name", "ERROR",
-                        JOptionPane.WARNING_MESSAGE);
-                refreshRoomList();
-                return;
-            }
-            izlazniTokKaServeru.println(customRoomPassword.getPassword());
-            izlazniTokKaServeru.println(customRoomRobots.getSelectedItem().toString());
-            try {
-                String available = (String) objectInput.readObject();
+             String available = (String) objectInput.readObject();
                 if (available.equals("serverNameUsed")) {
                     JOptionPane.showMessageDialog(this, "There is another room with that name,try another name", "ERROR",
                             JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
-                gw.setVisible(true);
-                this.dispose();
-
-            } catch (IOException ex) {
-                Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            izlazniTokKaServeru.println(customRoomPassword.getPassword());
+            izlazniTokKaServeru.println(customRoomRobots.getSelectedItem().toString());
+            GameWindow gw = new GameWindow(soketZaKontrolu, playerName);
+            gw.setVisible(true);
+            this.dispose();
         } catch (IOException ex) {
             Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
