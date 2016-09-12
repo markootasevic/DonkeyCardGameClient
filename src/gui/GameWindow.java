@@ -264,7 +264,7 @@ public class GameWindow extends javax.swing.JFrame {
                     if(player.getPlayerName().equals(player1.getPlayerName())) {
                     path = "/resources/5 cards 2 of clubs players 1.jpg";
                     } else {
-                        path = "/resources/5 cards 2 of clubs players 2,3";
+                        path = "/resources/5 cards 2 of clubs players 2,3.jpg";
                     }
                     Image img = ImageIO.read(getClass().getResource(path));
                     ImageIcon icon = new ImageIcon(img);
@@ -284,7 +284,7 @@ public class GameWindow extends javax.swing.JFrame {
                 if(player.getPlayerName().equals(player1.getPlayerName())) {
                 path = "/resources/4 cards back.jpg";
                 } else {
-                    path = "/resources/4 cards back players 2,3";
+                    path = "/resources/4 cards back players 2,3.jpg";
                 }
                 Image img = ImageIO.read(getClass().getResource(path));
                 ImageIcon icon = new ImageIcon(img);
@@ -303,7 +303,7 @@ public class GameWindow extends javax.swing.JFrame {
                 if(player.getPlayerName().equals(player1.getPlayerName())) {
                 path = "/resources/5 cards back players 1.jpg";
                 } else {
-                    path = "/resources/5 cards back players 2,3";
+                    path = "/resources/5 cards back players 2,3.jpg";
                 }
                 Image img = ImageIO.read(getClass().getResource(path));
                 ImageIcon icon = new ImageIcon(img);
@@ -330,6 +330,9 @@ public class GameWindow extends javax.swing.JFrame {
     }
 
     public void receveCard(Card card) {
+        if(card == null) {
+            return;
+        }
         if (myCards.length == 5) {
             return;
         }
