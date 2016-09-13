@@ -42,7 +42,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
             try {
 
                 objectInput = new ObjectInputStream(soketZaKontrolu.getInputStream());
-                Object list = objectInput.readObject();
+                Object list = objectInput.readUnshared();
 
                 if (list instanceof LinkedList<?>) {
                     roomList = (LinkedList<DGame>) list;
@@ -277,7 +277,7 @@ public class WelcomeScreen extends javax.swing.JFrame {
     public void refreshRoomList() {
         Object list = null;
         try {
-            list = objectInput.readObject();
+            list = objectInput.readUnshared();
         } catch (IOException ex) {
             Logger.getLogger(WelcomeScreen.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

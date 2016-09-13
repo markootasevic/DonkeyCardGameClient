@@ -48,7 +48,7 @@ public class GamplayThread extends Thread {
                 }
                 Object obj = null;
                 while (obj == null) {
-                    obj = objectInput.readObject();
+                    obj = objectInput.readUnshared();
                 }
 //                System.out.println(obj.toString());
                 if (!receve) {
