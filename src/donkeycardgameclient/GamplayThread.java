@@ -40,6 +40,7 @@ public class GamplayThread extends Thread {
 
     @Override
     public void run() {
+        boolean first = true;
         try {
             while (receve) {
                 if (!receve) {
@@ -49,11 +50,13 @@ public class GamplayThread extends Thread {
                 while (obj == null) {
                     obj = objectInput.readObject();
                 }
+//                System.out.println(obj.toString());
                 if (!receve) {
                     return;
                 }
                 if (obj instanceof String) {
                     String reconnect = (String) obj;
+                    System.out.println(reconnect);
                     if (reconnect.contains("Do you")) {
                         String[] array = reconnect.split("as");
                         String playerName = array[1];
@@ -62,6 +65,13 @@ public class GamplayThread extends Thread {
                 }
                 if (obj instanceof LinkedList<?>) {
                     playerList = (LinkedList<Player>) obj;
+                    System.out.println("lista je ");
+                    Player.ispisSvega(playerList);
+                    
+//                    if(first) {
+////                    Player.ispisSvega(playerList);
+//                    first = false;
+//                    }
                     for (int i = 0; i < playerList.size(); i++) {
                         if (playerList.get(i).isAreCardsDropped()) {
                             gw.someoneDroppedCards(playerList.get(i).getPlayerName());
@@ -72,9 +82,14 @@ public class GamplayThread extends Thread {
                 }
 
                 if (obj instanceof Card) {
-                    Card card = (Card) obj;
+                    Object obj1 = obj;
+                    Card card1 = (Card) obj1;
+                    Card card = new Card(card1.getCardNumber(),card1.getSymbolOfCard());
+                    System.out.println("thread primio kartu " + card.getCardNumber() + " " + card.getSymbolOfCard());
                     gw.receveCard(card);
                 }
+                
+                
 //                if(obj instanceof String) {
 //                    String drop = (String) obj;
 //                    gw.someoneDroppedCards(drop);

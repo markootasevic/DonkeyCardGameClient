@@ -70,9 +70,9 @@ public class GameWindow extends javax.swing.JFrame {
             izlazniTokKaServeru = new PrintStream(soket.getOutputStream());
             gt = new GamplayThread(soket, this);
             gt.start();
-            dropPlayer1.setVisible(true);
-            dropPlayer2.setVisible(true);
-            dropPlayer3.setVisible(true);
+            dropPlayer1.setVisible(false);
+            dropPlayer2.setVisible(false);
+            dropPlayer3.setVisible(false);
             disableButtons();
 
             this.addWindowListener(new WindowAdapter() {
@@ -147,7 +147,13 @@ public class GameWindow extends javax.swing.JFrame {
             if (playerList.get(i).getPlayerName().equals(playerName)) {
                 exists = true;
                 donkeyPlayer.setText(playerList.get(i).getDonkeyLetters());
+                
                 if (firstCards) {
+                    System.out.println("usao samo jednom!!!!!!!!!!");
+                    if(playerList.get(i).getPlayerHandCards().isEmpty()) {
+                    System.out.println("isbacio ovde");
+                    return;
+                }
                     firstCards = false;
                     for (int j = 0; j < playerList.get(i).getPlayerHandCards().size(); j++) {
                         myCards[j] = playerList.get(i).getPlayerHandCards().get(j);
@@ -159,6 +165,10 @@ public class GameWindow extends javax.swing.JFrame {
                         setImageToCardButton(btnCard3, myCards[2]);
                         setImageToCardButton(btnCard4, myCards[3]);
                     } else {
+                        if(myCards[0] == null) {
+                            System.out.println("null je");
+                            
+                        }
                         setImageToCardButton(btnCard1, myCards[0]);
                         setImageToCardButton(btnCard2, myCards[1]);
                         setImageToCardButton(btnCard3, myCards[2]);
@@ -182,30 +192,36 @@ public class GameWindow extends javax.swing.JFrame {
             if (exists == false) {
                 if (player1 == null) {
                     player1 = playerList.get(i);
+                    donkey1.setText(player1.getDonkeyLetters());
                     continue;
                 }
                 if (player2 == null) {
                     player2 = playerList.get(i);
+                    donkey2.setText(player2.getDonkeyLetters());
                     continue;
                 }
                 if (player3 == null) {
                     player3 = playerList.get(i);
+                    donkey3.setText(player3.getDonkeyLetters());
                     continue;
                 }
             }
 
             if (playerList.get(i).getPlayerName().equals(player1.getPlayerName())) {
                 player1 = playerList.get(i);
+                donkey1.setText(player1.getDonkeyLetters());
                 exists = true;
                 continue;
             }
             if (playerList.get(i).getPlayerName().equals(player2.getPlayerName())) {
                 player2 = playerList.get(i);
+                donkey2.setText(player2.getDonkeyLetters());
                 exists = true;
                 continue;
             }
             if (playerList.get(i).getPlayerName().equals(player3.getPlayerName())) {
                 player3 = playerList.get(i);
+                donkey3.setText(player3.getDonkeyLetters());
                 exists = true;
                 continue;
             }
@@ -330,12 +346,23 @@ public class GameWindow extends javax.swing.JFrame {
     }
 
     public void receveCard(Card card) {
-        if(card == null) {
+        System.out.println("gui primio kartu " + card.getCardNumber());
+        boolean sameCards = false;
+        for (int i = 0; i < myCards.length; i++) {
+            if(myCards[i] != null && myCards[i].equals(card) ) {
+                sameCards = true;
+                System.out.println("same cards");
+                System.out.println("moja je" + myCards[i].getCardNumber() + " " + myCards[i].getSymbolOfCard());
+                System.out.println("priljena je ");
+                System.out.println(card.getSymbolOfCard()+ " " + card.getCardNumber());
+                break;
+            }
+        }
+        if(card == null || firstCards || sameCards) {
+            System.out.println("uradio return");
             return;
         }
-        if (myCards.length == 5) {
-            return;
-        }
+        
         enableButtons();
         int a = getPopularElement();
 //        int numberOfSameCards = a[1];
@@ -387,7 +414,7 @@ public class GameWindow extends javax.swing.JFrame {
             // reduce by 50%
             image = image.getScaledInstance(image.getWidth(null) / 2, image.getHeight(null) / 2, Image.SCALE_SMOOTH);
             icon.setImage(image);
-
+            btn.setIcon(null);
             btn.setIcon(icon);
         } catch (IOException ex) {
             Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -395,6 +422,7 @@ public class GameWindow extends javax.swing.JFrame {
     }
 
     public String findCardImagePath(Card card) {
+        
         String path = "/resources/";
         if (card.isItTwoOfClubs()) {
             path += "2 of clubs.jpg";
@@ -476,6 +504,13 @@ public class GameWindow extends javax.swing.JFrame {
         izlazniTokKaServeru.println(cardString);
         btn.setIcon(null);
         myCards[cardHandPosition - 1] = null;
+        for (int i = 0; i < myCards.length; i++) {
+            if(myCards[i] == null) {
+                System.out.println("null je");
+                continue;
+            }
+            System.out.println(myCards[i].getCardNumber());
+        }
 
     }
 
@@ -793,6 +828,7 @@ public class GameWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDropCardsActionPerformed
 
     private void btnCard1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCard1ActionPerformed
+        System.out.println("poslo kartu");
         if (canIPassCard(1) == false) {
             JOptionPane.showMessageDialog(this, "You can't pass two of clubs yet, you can in" + (3 - twoOfClubsCounter) + "turns", "ERROR",
                     JOptionPane.WARNING_MESSAGE);
