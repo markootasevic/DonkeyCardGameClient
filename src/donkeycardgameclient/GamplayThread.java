@@ -37,7 +37,7 @@ public class GamplayThread extends Thread {
             Logger.getLogger(GamplayThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    public static int counter=0;
     @Override
     public void run() {
         boolean first = true;
@@ -89,7 +89,7 @@ public class GamplayThread extends Thread {
                     gw.receveCard(card);
                 }
                 
-                
+                counter++;
 //                if(obj instanceof String) {
 //                    String drop = (String) obj;
 //                    gw.someoneDroppedCards(drop);

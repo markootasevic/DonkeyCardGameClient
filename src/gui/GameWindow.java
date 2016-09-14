@@ -94,6 +94,7 @@ public class GameWindow extends javax.swing.JFrame {
                 JOptionPane.YES_NO_CANCEL_OPTION);
         if (opcija == JOptionPane.YES_OPTION) {
             System.exit(0);
+            System.out.println("primio "+GamplayThread.counter);
         }
 
     }
